@@ -1,0 +1,6 @@
+{
+  "text.autoconfig.villager-infos.option.modRenderingEnabled": "Mod Rendering",
+  "text.autoconfig.villager-infos.option.modRenderingEnabled.@Tooltip": "When disabled, the mod will not render any informations",
+  "text.autoconfig.villager-infos.option.renderVillagerTask": "Villager Task",
+  "text.autoconfig.villager-infos.option.renderVillagerTask.@Tooltip": "Shows the current task of the Villager over his head"
+}
