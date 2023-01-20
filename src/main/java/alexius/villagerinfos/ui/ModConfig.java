@@ -3,6 +3,7 @@ package alexius.villagerinfos.ui;
 import alexius.villagerinfos.VillagerInfos;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.Tooltip;
 import org.apache.logging.log4j.Level;
 
@@ -36,10 +37,17 @@ public class ModConfig implements ConfigData {
     @Tooltip()
     boolean renderVillagerActivity = true;
     @Tooltip()
+    boolean renderVillagerOther = false;
+    @Tooltip()
     float displaySize = .03f;
+    @Tooltip()
+    String selectedVillager = "";
+
+    public String getSelectedVillager() {
+        return selectedVillager;
+    }
 
     public boolean isModRenderingEnabled() {
-        VillagerInfos.logger.log(Level.INFO, "rendering enabled" + modRenderingEnabled);
         return modRenderingEnabled;
     }
     public boolean isRenderVillagerTask() {
@@ -69,6 +77,9 @@ public class ModConfig implements ConfigData {
         return renderVillagerType;
     }
 
+    public boolean isRenderVillagerOther() {
+        return renderVillagerOther;
+    }
 
     public boolean isRenderVillagerCanGolem() {
         return renderVillagerCanGolem;

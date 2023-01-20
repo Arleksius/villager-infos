@@ -2,14 +2,21 @@ package alexius.villagerinfos.render;
 
 import alexius.villagerinfos.VillagerInfos;
 import alexius.villagerinfos.ui.ModConfig;
+import com.mojang.blaze3d.platform.TextureUtil;
+import com.mojang.blaze3d.systems.RenderSystem;
 import fi.dy.masa.malilib.render.RenderUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.ClientPlayerEntity;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.render.*;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.client.world.ClientWorld;
+import net.minecraft.data.client.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.passive.VillagerEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.village.TradeOffer;
 import net.minecraft.world.World;
@@ -30,7 +37,39 @@ public class OverlayRenderer {
             if (config.isRenderVillagerNameTagInfos()){
                 renderVillagerTasks(mc, config);
             }
+            if (config.isRenderVillagerOther()){
+                renderVillagerOther(mc, config, projMatrix);
+            }
         }
+    }
+
+    public static void renderVillagerOther(MinecraftClient mc, ModConfig config, Matrix4f projMatrix){
+        GetVillagers().forEach(villager -> {
+            if (villager.getUuid().toString().equals(config.getSelectedVillager())){
+                Item item = villager.getOffers().get(0).getSellItem().getItem();
+                RenderUtils.bindTexture(TextureMap.getId(item));
+                //RenderUtils.drawTexturedRect();
+            }
+            RenderSystem.setShader(GameRenderer::getPositionColorProgram);
+            RenderSystem.applyModelViewMatrix();
+            Tessellator tessellator = Tessellator.getInstance();
+            BufferBuilder buffer = tessellator.getBuffer();
+
+            RenderUtils.setupBlend();
+
+            buffer.begin(VertexFormat.DrawMode.LINE_STRIP, VertexFormats.POSITION_COLOR);
+
+            /*buffer.vertex(
+                    projMatrix,
+                    (float) villager.getX(),
+                    (float) villager.getY(),
+                    (float) villager.getZ()
+            ).color(0,);
+            */
+            tessellator.draw();
+
+            RenderSystem.disableBlend();
+        });
     }
 
     public static void renderVillagerTasks(MinecraftClient mc, ModConfig config){
@@ -63,7 +102,7 @@ public class OverlayRenderer {
             if (config.isRenderVillagerUUID())
                 informations.add("UUID: " + v.getUuid());
             if (false)
-                v.getBoundingBox().expand(10);
+                informations.add("noClip: " + v.noClip);
             if (config.isRenderVillagerActivity())
                 informations.add("Activity: " + v.getBrain().getFirstPossibleNonCoreActivity().get());
             Vec3d eyePos = v.getEyePos();
